@@ -31,7 +31,7 @@ int main () {
     
     int max_time;
     double tol;
-    max_time = 10;
+    max_time = 15;
     tol = 0.1;
     
     // get data from openCV Mat
