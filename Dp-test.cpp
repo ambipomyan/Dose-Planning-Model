@@ -28,92 +28,64 @@ int main () {
     m = img0.cols;
     n = img0.rows;
     printf("img size: %d rows x %d cols\n", n, m);
-    int *arr0, *arr1, *pred;
-    arr0 = (int *)malloc(m*n*sizeof(int));
-    arr1 = (int *)malloc(m*n*sizeof(int));
-    pred = (int *)malloc(m*n*sizeof(int));
     
+    int max_time;
+    double tol;
+    max_time = 10;
+    tol = 0.1;
+    
+    // get data from openCV Mat
+    int *data;
+    data = (int *)malloc(m*n*sizeof(int));
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            arr0[i*m+j] = (int)img0.data[i*m+j];
-            arr1[i*m+j] = 0;
-            pred[i*m+j] = 0;
+            data[i*m+j] = (int)img0.data[i*m+j];
         }
     }
+    
+    // init dose plan
+    int *ndoses;
+    ndoses = (int *)malloc(max_time*sizeof(int));
+    dp_init_dose_plan(ndoses, max_time);
+    
+    // init domain
+    DP_DOMAIN *domain;
+    domain = (DP_DOMAIN *)malloc(sizeof(DP_DOMAIN_));
+    dp_init_domain(domain, n, m, data, ndoses, tol, max_time);
+    
+    printf("dose plan:\n");
+    dp_print_dose_plan(domain);
     
     printf("input image:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            printf("%*d ",4 ,arr0[i*m+j]);
-        }
-        printf("\n");
-    }
+    dp_print_domain(domain);
     
 // classification
-    // TODO
+    dp_classification(domain);
     printf("classification result:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if (arr0[i*m+j] >= 200) {
-                arr1[i*m+j] = 200;
-            } else if (arr0[i*m+j] >= 100) {
-                arr1[i*m+j] = 100;
-            } else {
-                arr1[i*m+j] = 0;
-            }
-            printf("%*d ",4 ,arr1[i*m+j]);
-        }
-        printf("\n");
-    }
+    dp_print_domain(domain);
     
 // simulation
-    int iters;
-    double tol, resid;
-    iters = 0;
-    tol = 0.1;
-    resid = 1.0;
-    
-    while (resid > tol && iters < 10) {
-        // dummy-test: pred image update
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (i%2==0 && j%2==0) pred[i*m+j] = 255-arr1[i*m+j];
-            }
-        }
-        
-        // resid update
-        resid = 0.0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                resid += (double)(pred[i*m+j]-0)*(pred[i*m+j]-0)/(m*n);
-            }
-        }
-        // # of iters update
-        iters++;
+    while (domain->resid > domain->tol && domain->ntime < domain->max_time) {
+        // dummy test
+        dp_simulation(domain);
     }
-    
-    //printf("Residue: %lf\n", resid);
     
 // outputs
     // pred image
     printf("pred image:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            printf("%*d ",4 ,pred[i*m+j]);
-        }
-        printf("\n");
-    }
+    dp_print_domain(domain);
     
+    // save to image
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            img1.data[i*m+j] = (uchar)(pred[i*m+j]);
+            img1.data[i*m+j] = (uchar)(domain->data[i*m+j]);
         }
     }
     imwrite("pred.jpg", img1);
     
-    free(arr0);
-    free(arr1);
-    free(pred);
+    free(data);
+    free(ndoses);
+    free(domain);
     
     return 0;
 }

@@ -9,25 +9,30 @@ typedef struct DP_DOMAIN_ {
     int nrows;
     int ncols;
     // data
-    int *data; // size of nrows*ncols
-    int *ndoses; // size of max_time
+    int *data; // size = nrows*ncols
+    int *old_data;
+    // dose
+    int *ndoses; // size = max_time
     // constrains
-    int tol;
+    double resid;
+    double tol;
     int ntime;
     int max_time;
 }DP_DOMAIN;
 
 // init
-int dp_init_domain();
+int dp_init_dose_plan(int *ndoses, int max_time);
 
-int dp_init_dose_plan();
+int dp_init_domain(DP_DOMAIN *domain, int nrows, int ncols, int *data, int *ndoses, double tol, int max_time);
 
 // util
-int ad_print_domain();
+int dp_print_domain(DP_DOMAIN *domain);
+
+int dp_print_dose_plan(DP_DOMAIN *domain);
 
 // cell
-int dp_classification();
+int dp_classification(DP_DOMAIN *domain);
 
-int dp_apply_dose();
+int dp_apply_dose(DP_DOMAIN *domain);
 
-int dp_simulation();
+int dp_simulation(DP_DOMAIN *domain);
