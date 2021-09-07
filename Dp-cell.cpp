@@ -12,8 +12,8 @@ int dp_classification(DP_DOMAIN *domain) {
         for (int j = 0; j < domain->ncols; j++) {
             if (domain->data[i*domain->ncols+j] >= 200) {
                 domain->data[i*domain->ncols+j] = 200;
-            } else if (domain->data[i*domain->ncols+j] >= 100) {
-                domain->data[i*domain->ncols+j] = 100;
+            } else if (domain->data[i*domain->ncols+j] >= 150) {
+                domain->data[i*domain->ncols+j] = 150;
             } else {
                 domain->data[i*domain->ncols+j] = 0;
             }
@@ -28,20 +28,20 @@ int dp_apply_dose(DP_DOMAIN *domain) {
     for (int i = 1; i < domain->nrows-1; i++) {
         for (int j = 1; j < domain->ncols-1; j++) {
             // stencil
-            domain->data[i*domain->ncols+j] = (domain->old_data[(i-1)*domain->ncols+j] + \
+            domain->data[i*domain->ncols+j] = (domain->old_data[i*domain->ncols+j]     + \
+                                               domain->old_data[(i-1)*domain->ncols+j] + \
                                                domain->old_data[i*domain->ncols+(j-1)] + \
                                                domain->old_data[i*domain->ncols+(j+1)] + \
-                                               domain->old_data[(i+1)*domain->ncols+j]) / 4;
-            
-            if (i%2==0 && j%2==0) {
-                if (domain->data[i*domain->ncols+j] == 200) {
-                    domain->data[i*domain->ncols+j] = abs(4*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
-                } else if (domain->data[i*domain->ncols+j] == 100) {
-                    domain->data[i*domain->ncols+j] = abs(3*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
-                } else {
-                    domain->data[i*domain->ncols+j] = abs(5*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
-                }
+                                               domain->old_data[(i+1)*domain->ncols+j]) / 4.5;
+
+            if (domain->data[i*domain->ncols+j] == 200) {
+                domain->data[i*domain->ncols+j] = abs(10*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
+            } else if (domain->data[i*domain->ncols+j] == 100) {
+                domain->data[i*domain->ncols+j] = abs(3*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
+            } else {
+                domain->data[i*domain->ncols+j] = abs(15*domain->ndoses[domain->ntime] + domain->old_data[i*domain->ncols+j]);
             }
+            
         }
     }
     

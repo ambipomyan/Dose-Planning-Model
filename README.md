@@ -10,13 +10,9 @@ Desired results:
 
 `inputs`
 
-![10-iters](preview-pics/preview-input.jpg)
+![10-iters](preview-pics/preview-input.png)
 
 `gropu1`
-
-medicinal effects after 10 iterations:
-
-![10-iters](preview-pics/preview-pred-10.jpg)
 
 medicinal effects after 15 iterations:
 
@@ -26,12 +22,20 @@ medicinal effects after 20 iterations:
 
 ![10-iters](preview-pics/preview-pred-20.jpg)
 
+medicinal effects after 30 iterations:
+
+![10-iters](preview-pics/preview-pred-30.jpg)
+
 `group2`
-
-medicinal effects after 15 iterations:
-
-![10-iters](preview-pics/preview-pred-15.jpg)
 
 pure cell growth after 15 iterations:
 
 ![10-iters](preview-pics/preview-pred-15-no-dose.jpg)
+
+pure cell growth after 20 iterations:
+
+![10-iters](preview-pics/preview-pred-20-no-dose.jpg)
+
+pure cell growth after 30 iterations:
+
+![10-iters](preview-pics/preview-pred-30-no-dose.jpg)

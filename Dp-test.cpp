@@ -18,7 +18,7 @@ using namespace cv;
 
 int main () {
 // inputs
-    Mat img0 = imread("input.jpg", IMREAD_GRAYSCALE);
+    Mat img0 = imread("input.png", IMREAD_GRAYSCALE);
     if (img0.empty()) printf("Could not get image.\n");
     
     Mat img1 = img0.clone();
